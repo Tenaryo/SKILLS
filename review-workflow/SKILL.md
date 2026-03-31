@@ -68,7 +68,7 @@ description: This skill should be used when the user asks to "review C++ code", 
 
 ## Phase 3: 多维度审查
 
-在完整阅读代码库并充分理解后，从以下维度进行系统性审查。详细审查标准参见 `references/review-criteria.md`。
+在完整阅读代码库并充分理解后，从以下维度进行系统性审查。
 
 ### 3.1 审查维度
 
@@ -145,7 +145,7 @@ description: This skill should be used when the user asks to "review C++ code", 
 4. **预期效果** - 修改后带来的改进（性能提升/可读性增强/安全性提高等）
 5. **请求批准** - 询问架构师是否同意该修改方案
 
-问题格式示例：
+问题格式示例（使用`question` tool）：
 
 ```
 📍 [性能/高] src/core/parser.cpp:42-58
@@ -200,8 +200,6 @@ description: This skill should be used when the user asks to "review C++ code", 
 ### 5.2 应用顺序
 
 按照 Phase 4 中批准的顺序，逐个改动
-
-**每应用一个改动后，验证编译通过。**
 
 ### 5.3 验证
 
