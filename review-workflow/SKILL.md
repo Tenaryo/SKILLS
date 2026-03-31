@@ -145,7 +145,7 @@ description: This skill should be used when the user asks to "review C++ code", 
 4. **预期效果** - 修改后带来的改进（性能提升/可读性增强/安全性提高等）
 5. **请求批准** - 询问架构师是否同意该修改方案
 
-问题格式示例（使用`question` tool）：
+问题格式示例：
 
 ```
 📍 [性能/高] src/core/parser.cpp:42-58
