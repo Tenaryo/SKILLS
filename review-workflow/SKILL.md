@@ -200,7 +200,7 @@ description: This skill should be used when the user asks to "review C++ code", 
 
 ### 5.2 应用顺序
 
-按照 Phase 4 中批准的顺序，逐个改动
+按照 Phase 4 中批准的顺序，并行分发subagent逐个改动，在subagent工作完后逐一验证subagent的工作，如果有误亲自修改。
 
 ### 5.3 验证
 
