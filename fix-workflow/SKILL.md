@@ -176,6 +176,7 @@ git commit -m "test: add reproduction test for <bug-description>"
 **L6 - 具体代码层**
 - 所有具体改动的代码
 - 一段一段的呈现，不要一起问
+- 具体代码的改动在正文输出，只有询问的问题使用question工具，类似"架构师，您是否批准xxx"
 
 ### 5.3 问题格式
 
@@ -190,6 +191,8 @@ git commit -m "test: add reproduction test for <bug-description>"
    - 缺点 (Cons)
 4. **推荐选项** - 基于根因分析的推荐，说明理由
 5. **请求批准** - 询问架构师是否同意该方案
+
+**⚠️ 关键约束：所有上下文信息（当前代码片段、模块结构、选项列表、推荐理由等）必须放在正文输出中，question 工具中只包含简短的审批问题（如"架构师，您是否批准这个修复方案？"）。不要将大量内容堆砌在 question 工具里。**
 
 ### 5.4 问答流程
 
