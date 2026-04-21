@@ -170,7 +170,7 @@ def create_scaffold(target_dir: Path) -> None:
     test_main = tests_dir / "test_main.cpp"
     if not test_main.exists():
         test_content = apply_template(
-            '#include <cassert>\n#include <cstdlib>\n\nauto main() -> int {\n    assert(true);\n    return EXIT_SUCCESS;\n}\n'
+            '#include <gtest/gtest.h>\n\nTEST(MainTest, SanityCheck) {\n    EXPECT_TRUE(true);\n}\n'
         )
         test_main.write_text(test_content, encoding="utf-8")
         print(f"  created: {test_main}")
@@ -189,8 +189,8 @@ def update_cmake_test_entries(target_dir: Path, sources: dict) -> None:
     for tf in sorted(test_files):
         name = tf.stem
         lines.append(f"add_executable({name} {name}.cpp)")
-        lines.append(f"target_link_libraries({name} PRIVATE {lib_name})")
-        lines.append(f"target_compile_options({name} PRIVATE -UNDEBUG)")
+        lines.append(f"target_link_libraries({name} PRIVATE {lib_name} GTest::gtest_main)")
+        lines.append(f"gtest_discover_tests({name})")
         lines.append("")
 
     tests_cmake.write_text("\n".join(lines), encoding="utf-8")

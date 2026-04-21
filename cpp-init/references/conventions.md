@@ -45,12 +45,13 @@ project_root/
 - `BUILD_TESTS` option (ON by default) for conditional test building
 - Strict warnings: `-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`
 - Debug: `-g -O0`, Release: `-O3`
+- Google Test fetched via `FetchContent` (v1.14.0) when `BUILD_TESTS` is ON
 
 ### tests/CMakeLists.txt
 
 - One executable per `test_*.cpp` file
-- Each test linked against the core library
-- `-UNDEBUG` flag to ensure `assert()` works in all build modes
+- Each test linked against the core library and `GTest::gtest_main`
+- Uses `gtest_discover_tests()` to register each test with CTest
 - Uses `file(GLOB ...)` to auto-discover test files
 
 ## Build Script (build.sh)
@@ -67,35 +68,26 @@ project_root/
 
 - Uses `set -euo pipefail` for strict error handling
 - Auto-configures CMake if not already configured
-- Discovers all `tests/test_*.cpp` files and their corresponding executables
-- Runs each test independently
+- Runs tests via `ctest --output-on-failure -j$(nproc)` for parallel execution
 - Colored output (Red/Green/Yellow/Blue)
-- Summary with pass/fail counts
 - Exit code 1 if any test fails, 0 if all pass
-- No external test framework dependency (uses raw `assert()`)
+- Test framework: Google Test (fetched via CMake FetchContent, no manual install)
 
 ## Test File Conventions
 
 - File naming: `test_{module}.cpp` (e.g., `test_database.cpp`, `test_parser.cpp`)
-- Each test file is a standalone executable with its own `main()`
-- Use `assert()` for assertions (no framework dependency)
-- Return `EXIT_SUCCESS` on pass, assertion failure causes abort
+- Each test file uses Google Test macros (`TEST`, `TEST_F`, `EXPECT_*`, `ASSERT_*`)
+- Link with `GTest::gtest_main` to get an automatically generated `main()` entry point
 - Include the module header being tested
 
 ```cpp
 #include "module.hpp"
-#include <cassert>
-#include <cstdlib>
+#include <gtest/gtest.h>
 
-auto main() -> int {
-    // Test cases in scoped blocks
-    {
-        auto result = function_under_test();
-        assert(result.has_value());
-        assert(result->expected_property() == expected_value);
-    }
-
-    return EXIT_SUCCESS;
+TEST(ModuleTest, BasicFunctionality) {
+    auto result = function_under_test();
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result->expected_property(), expected_value);
 }
 ```
 
