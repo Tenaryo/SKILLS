@@ -259,7 +259,7 @@ git commit -m "feat: <feature-description>"
 ```
 
 Commit message 规范:
-- 使用 `feat:` 前缀
+- 使用 `feat:` 前缀或者其他更合适前缀
 - 简洁描述功能（英文）
 
 ## Phase 8: 合并 Worktree（Rebase）

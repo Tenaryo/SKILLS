@@ -265,7 +265,7 @@ git commit -m "refactor: <description-of-change>"
 ```
 
 Commit message 规范：
-- 使用 `refactor:` 前缀
+- 使用 `refactor:` 前缀或者其他更合适前缀
 - 简洁描述重构内容（英文）
 - 如有多组独立改动，分别提交
 

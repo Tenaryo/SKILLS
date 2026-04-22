@@ -264,7 +264,7 @@ git commit -m "fix: <bug-description>"
 ```
 
 Commit message 规范:
-- 使用 `fix:` 前缀
+- 使用 `fix:` 前缀或者其他更合适前缀
 - 简洁描述修复的bug（英文）
 
 ## Phase 8: 合并 Worktree（Rebase）
