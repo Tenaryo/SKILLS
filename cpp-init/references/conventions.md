@@ -99,7 +99,7 @@ TEST(ModuleTest, BasicFunctionality) {
 
 - Based on LLVM style
 - 4-space indentation, no tabs
-- 80 column limit
+- 120 column limit
 - Attach braces (K&R style)
 - Left-aligned pointers and references
 - No bin-packing of parameters/arguments
@@ -112,7 +112,7 @@ TEST(ModuleTest, BasicFunctionality) {
 
 ## CMake Style (.cmake-format.yaml)
 
-- 80 column limit
+- 120 column limit
 - 4-space indentation
 - Dangling parentheses (`)` on its own line)
 - Lowercase commands, uppercase keywords

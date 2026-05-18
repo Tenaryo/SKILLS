@@ -26,7 +26,7 @@ The script handles two scenarios:
 - `src/main.cpp` — Entry point (new projects only)
 - `build.sh` — Build wrapper (Ninja + cmake)
 - `run_tests.sh` — Test runner via ctest with colored output
-- `.clang-format` — C++ code formatting (LLVM-based, 4-space indent, 80 columns)
+- `.clang-format` — C++ code formatting (LLVM-based, 4-space indent, 120 columns)
 - `.cmake-format.yaml` — CMake code formatting
 - `.clang-tidy` — Static analysis (bugprone, modernize, performance, readability, etc.)
 - `.pre-commit-config.yaml` — Pre-commit hooks (clang-format, cmake-format, clang-tidy)
@@ -83,8 +83,8 @@ Read `references/conventions.md` for the full specification. Key points:
 - **Google Test** — fetched via CMake FetchContent (v1.14.0), no manual install needed
 - **One test executable per `test_*.cpp` file** in `tests/`, discovered via `gtest_discover_tests`
 - **Conventional commits**: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `build:`, `ci:`
-- **clang-format** — LLVM-based, 4-space indent, 80 columns, regroup includes, K&R braces
-- **cmake-format** — 80 columns, dangling parens, lowercase commands, uppercase keywords
+- **clang-format** — LLVM-based, 4-space indent, 120 columns, regroup includes, K&R braces
+- **cmake-format** — 120 columns, dangling parens, lowercase commands, uppercase keywords
 - **clang-tidy** — bugprone + modernize + performance + readability + misc + portability
 - **Pre-commit hooks** — auto-format (clang-format, cmake-format) + static analysis (clang-tidy)
 - **Naming**: See `AGENTS.md` — Classes PascalCase, functions snake_case, members snake_case_, constants kPascalCase
