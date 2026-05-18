@@ -22,7 +22,7 @@ The script handles two scenarios:
 ## What Gets Generated
 
 ### Core Files
-- `CMakeLists.txt` — Root CMake config (C++23, INTERFACE library, strict warnings, sanitizer option, Google Test via FetchContent)
+- `CMakeLists.txt` — Root CMake config (C++23, INTERFACE library, strict warnings, sanitizer option, Google Test via system package)
 - `src/main.cpp` — Entry point (new projects only)
 - `build.sh` — Build wrapper (Ninja + cmake)
 - `run_tests.sh` — Test runner via ctest with colored output
@@ -80,7 +80,7 @@ Read `references/conventions.md` for the full specification. Key points:
 - **C++23**, GCC 13+, CMake 3.21+, Ninja
 - **INTERFACE library** (`{project}_core`) for shared compile options and includes
 - **Strict warnings**: `-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`
-- **Google Test** — fetched via CMake FetchContent (v1.14.0), no manual install needed
+- **Google Test** — via system package (`apt install libgtest-dev`)
 - **One test executable per `test_*.cpp` file** in `tests/`, discovered via `gtest_discover_tests`
 - **Conventional commits**: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `build:`, `ci:`
 - **clang-format** — LLVM-based, 4-space indent, 120 columns, regroup includes, K&R braces

@@ -49,7 +49,7 @@ project_root/
 - `BUILD_TESTS` option (ON by default) for conditional test building
 - Strict warnings: `-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`
 - Debug: `-g -O0`, Release: `-O3`
-- Google Test fetched via `FetchContent` (v1.14.0) when `BUILD_TESTS` is ON
+- Google Test via system package (`find_package(GTest REQUIRED)`) when `BUILD_TESTS` is ON
 
 ### tests/CMakeLists.txt
 
@@ -75,7 +75,7 @@ project_root/
 - Runs tests via `ctest --output-on-failure -j$(nproc)` for parallel execution
 - Colored output (Red/Green/Yellow/Blue)
 - Exit code 1 if any test fails, 0 if all pass
-- Test framework: Google Test (fetched via CMake FetchContent, no manual install)
+- Test framework: Google Test (via system package, `apt install libgtest-dev`)
 
 ## Test File Conventions
 
