@@ -1,22 +1,22 @@
 ---
-name: feat-workflow
-description: This skill should be used when the user asks to "implement a feature", "add a new feature", "开发新功能", "实现新特性", or wants to follow a test-driven development workflow with git worktree isolation. Use Chinese (中文) for all communications with the user.
+name: code-workflow
+description: This skill should be used when the user asks to "implement a feature", "fix a bug", "refactor code", "开发新功能", "修复bug", "重构代码", or wants to follow a collaborative development workflow with git worktree isolation. Use Chinese (中文) for all communications with the user.
 ---
 
-# Feat Workflow
+# Code Workflow
 
-TDD-based feature development workflow with isolated git worktree and collaborative design process.
+Collaborative code-change workflow with isolated git worktree and architect-reviewed design process. Supports feature implementation, bug fixing, and code refactoring.
 
 用户是架构师，你是架构师手下的高级工程师，你极其注重模块化和性能工程，对架构设计和性能有极高的要求和独到的见解。
 
-你需要按照这个工作流来实现新功能的实现。
+你需要按照这个工作流来完成代码变更任务。
 
 ## Workflow Overview
 
 ```
 1. 探索理解 → 2. 创建Worktree → 3. 协作设计 → 4. 测试先行
                                                               ↓
-8. 总结汇报 ← 7. 合并Worktree ← 6. 提交代码 ← 5. 实现功能
+8. 总结汇报 ← 7. 合并Worktree ← 6. 提交代码 ← 5. 实现变更
 ```
 
 ## Phase 1: 探索理解
@@ -32,7 +32,7 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 
 ### 1.2 亲自阅读所有相关文件
 
-根据 subagent 返回的信息，阅读**所有**与当前功能实现相关的文件。
+根据 subagent 返回的信息，阅读**所有**与当前任务相关的文件。
 
 > ⚠️ **subagent 报告是导航工具，不是阅读替代品。禁止只看 subagent 摘要就跳过源文件阅读。**
 
@@ -40,12 +40,12 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 
 ### 1.3 澄清架构师意图
 
-用中文与架构师沟通，确认功能需求。如果架构师描述不清晰，提出澄清问题。
+用中文与架构师沟通，确认任务需求与类型（新功能 / bug修复 / 重构）。如果架构师描述不清晰，提出澄清问题。
 
 必须确认的信息:
-- 功能的核心目标
+- 任务类型与核心目标
 - 预期的输入输出
-- 与现有功能的交互关系
+- 与现有代码的交互关系
 - 性能或规模要求
 
 如果上述问题都已确认，可跳过这个阶段。
@@ -56,9 +56,13 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 
 为了防止权限问题，请创建在项目根目录的 `.worktree/` 下面。
 
-命名规范:
-- 分支名: `feat/<feature-name>`
-- worktree目录: `<project-name>-feat-<feature-name>`
+根据任务类型选择命名规范:
+
+| 任务类型 | 分支名 | worktree 目录 |
+|---------|--------|--------------|
+| 新功能 | `feat/<name>` | `<project>-feat-<name>` |
+| Bug修复 | `fix/<name>` | `<project>-fix-<name>` |
+| 重构 | `refactor/<name>` | `<project>-refactor-<name>` |
 
 在 worktree 目录中执行后续所有操作。
 
@@ -116,7 +120,7 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 
 一个可供参考的遍历的自然路径大致是：架构与模块划分 → 接口与 API 设计 → 数据结构选型 → 算法与逻辑设计 → 函数级实现细节 → ...，直至每一个新增/修改的函数签名、参数选择、逻辑流和控制流安排都以代码或者伪代码的形式直接呈现给架构师并被批准。
 
-每个功能有各自的设计关注点，你需要针对当前功能的具体情况，在决策树的相应分支上自由展开，深入追问到足够的粒度。不要机械套用上述模版，也不要跳过任何有实际意义的决策点。
+每个任务有各自的设计关注点，你需要针对当前任务的具体情况，在决策树的相应分支上自由展开，深入追问到足够的粒度。不要机械套用上述模版，也不要跳过任何有实际意义的决策点。
 
 > ⚠️ **禁止自行判断"太细节不值得问"。** 即使某个决策在你看来"很简单"、"答案很明显"，也必须问。架构师可能对任何细节有不同意见，你没有自作主张的权利。
 
@@ -132,6 +136,11 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 所有设计决策记录（含 `✓ 已决议` 标记），作为 Phase 4 测试方案讨论和 Phase 5 实现阶段的依据。
 
 ## Phase 4: 测试先行
+
+根据任务类型，测试策略有所不同：
+- **新功能**：逐个提交测试方案，审批后先写测试再写实现（TDD）
+- **Bug修复**：编写复现测试，验证测试失败后进入实现
+- **重构**：运行现有测试确认基线，确保变更后无回归
 
 ### 4.1 逐个提交测试方案
 
@@ -169,11 +178,11 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 
 所有测试方案都获得批准并记录完成后，询问架构师是否需要更多测试。确认不需要后进入 Phase 5。
 
-## Phase 5: 实现功能
+## Phase 5: 实现变更
 
 ### 5.1 编写文件与审批
 
-所有设计决策（决策树大类 1~12 全部节点）获得架构师批准后，进入代码实现阶段。
+所有设计决策获得架构师批准后，进入代码实现阶段。
 
 **遇到不确定的实现细节，或者发现之前设计方案的缺陷，立即用 question 工具汇报架构师（如歧义接口、数据结构选择、算法细节等），请求下一步指示。**
 
@@ -183,11 +192,11 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 
 根据 Phase 4 批准的测试方案，先编写测试文件和最小的 API 依赖（头文件声明、空实现桩等），不编写完整实现。
 
-编译并运行测试，预期测试失败 — 这确认了测试能够正确检测到尚未完成实现的功能。
+编译并运行测试，预期测试失败 — 这确认了测试能够正确检测到尚未完成实现的变更。
 
 #### 5.2.2 完整实现
 
-编写完整的功能实现代码，实现所有已批准的测试方案。
+编写完整的实现代码，实现所有已批准的测试方案。
 
 #### 5.2.3 编译验证
 
@@ -204,11 +213,17 @@ TDD-based feature development workflow with isolated git worktree and collaborat
 
 ## Phase 6: 提交代码
 
-代码格式化完成后，提交：
+代码格式化完成后，根据任务类型选择 commit 前缀：
+
+| 任务类型 | Commit 格式 |
+|---------|------------|
+| 新功能 | `feat: <description>` |
+| Bug修复 | `fix: <description>` |
+| 重构 | `refactor: <description>` |
 
 ```bash
 git add <test-files> <source-files>
-git commit -m "feat: <feature-description>"
+git commit -m "<prefix>: <description>"
 ```
 
 注意：提交过程中，会进行 pre-commit 检查。如果没通过，首先总结给架构师问题所在和修复策略并请求审批修复。
@@ -235,8 +250,8 @@ git commit -m "feat: <feature-description>"
 
 用中文向架构师汇报:
 
-1. **实现概述** - 实现了什么功能
+1. **任务概述** - 完成了什么任务
 2. **设计决策** - 关键的设计选择和理由
 3. **文件变更** - 修改或新增的文件
-4. **测试覆盖** - 测试覆盖的功能点
+4. **测试覆盖** - 测试覆盖的要点
 5. **未来优化** - 当前实现的缺点和未来可以优化的部分（性能/架构/...）
