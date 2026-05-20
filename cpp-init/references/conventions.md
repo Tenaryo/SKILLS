@@ -130,6 +130,7 @@ Enabled checks:
 - `readability-*` (except `magic-numbers`, `identifier-naming`, `identifier-length`)
 - `misc-*` (except `no-recursion`, `include-cleaner`)
 - `portability-*`
+- `-clang-diagnostic-*` (disabled: compiler diagnostics handled by GCC's `-Wall -Wextra -Werror`)
 - `cppcoreguidelines-pro-type-member-init`
 
 Warnings are treated as errors. Header filter: `^(src|tests)/.*`

@@ -11,6 +11,7 @@ Checks: >
   -misc-no-recursion,
   -misc-include-cleaner,
   portability-*,
+  -clang-diagnostic-*,
   cppcoreguidelines-pro-type-member-init,
 
 HeaderFilterRegex: '^(src|tests)/.*'
