@@ -22,7 +22,7 @@ The script handles two scenarios:
 ## What Gets Generated
 
 ### Core Files
-- `CMakeLists.txt` — Root CMake config (C++23, INTERFACE library, strict warnings, sanitizer option, Google Test via system package)
+- `CMakeLists.txt` — Root CMake config (C++23, STATIC library, strict warnings, sanitizer option, Google Test via FetchContent)
 - `src/main.cpp` — Entry point (new projects only)
 - `build.sh` — Build wrapper (Ninja + cmake)
 - `run_tests.sh` — Test runner via ctest with colored output
@@ -64,7 +64,7 @@ The script handles two scenarios:
 2. The script detects existing `.cpp`/`.hpp` files
 3. Source files are moved to `src/`, test files (prefixed with `test_`) are moved to `tests/`
 4. All infrastructure files are generated around the existing code
-5. `tests/CMakeLists.txt` is updated to reference all discovered test files
+ 5. `tests/CMakeLists.txt` auto-discovers test files via `file(GLOB)`, no manual updates needed
 6. Existing files (README.md, LICENSE, etc.) are NOT overwritten
 
 ### Scenario C: Adding Infrastructure to an Already-Structured Project
@@ -78,9 +78,9 @@ The script handles two scenarios:
 Read `references/conventions.md` for the full specification. Key points:
 
 - **C++23**, GCC 13+, CMake 3.21+, Ninja
-- **INTERFACE library** (`{project}_core`) for shared compile options and includes
+- **STATIC library** (`{project}_lib`) for compiling source files once and sharing via static linking
 - **Strict warnings**: `-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`
-- **Google Test** — via system package (`apt install libgtest-dev`)
+- **Google Test** — via FetchContent (v1.14.0) auto-downloaded during CMake configure
 - **One test executable per `test_*.cpp` file** in `tests/`, discovered via `gtest_discover_tests`
 - **Conventional commits**: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `build:`, `ci:`
 - **clang-format** — LLVM-based, 4-space indent, 120 columns, regroup includes, K&R braces
@@ -96,7 +96,7 @@ Asset files use `{{PLACEHOLDER}}` syntax, replaced by the init script:
 | Placeholder | Description | Default |
 |---|---|---|
 | `{{PROJECT_NAME}}` | Project and executable name | Directory name |
-| `{{LIB_NAME}}` | INTERFACE library name | `{project}_core` |
+| `{{LIB_NAME}}` | STATIC library name | `{project}_lib` |
 | `{{AUTHOR}}` | Author for LICENSE | "TODO" |
 | `{{YEAR}}` | Copyright year | Current year |
 

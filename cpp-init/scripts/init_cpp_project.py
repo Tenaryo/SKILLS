@@ -33,7 +33,7 @@ def detect_project_name(target_dir: Path) -> str:
 
 
 def to_lib_name(project_name: str) -> str:
-    return project_name + "_core"
+    return project_name + "_lib"
 
 
 def collect_existing_sources(target_dir: Path) -> dict:
@@ -110,45 +110,49 @@ def move_sources_to_src(target_dir: Path, sources: dict) -> None:
     src_dir = target_dir / "src"
     src_dir.mkdir(exist_ok=True)
 
+    def maybe_move(f: Path) -> None:
+        try:
+            f.relative_to(src_dir)
+            return
+        except ValueError:
+            pass
+        rel = f.relative_to(target_dir)
+        dest = src_dir / rel
+        if not dest.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(f), str(dest))
+            print(f"  moved: {f} -> {dest}")
+
     for f in sources.get("main", []):
-        if f.parent != src_dir:
-            dest = src_dir / f.name
-            if not dest.exists():
-                shutil.move(str(f), str(dest))
-                print(f"  moved: {f} -> {dest}")
+        maybe_move(f)
 
     for f in sources.get("other_cpp", []):
-        if f.parent != src_dir:
-            dest = src_dir / f.name
-            if not dest.exists():
-                shutil.move(str(f), str(dest))
-                print(f"  moved: {f} -> {dest}")
+        maybe_move(f)
 
     for f in sources.get("hpp", []):
-        if f.parent != src_dir:
-            dest = src_dir / f.name
-            if not dest.exists():
-                shutil.move(str(f), str(dest))
-                print(f"  moved: {f} -> {dest}")
+        maybe_move(f)
 
     for f in sources.get("h", []):
-        if f.parent != src_dir:
-            dest = src_dir / f.name
-            if not dest.exists():
-                shutil.move(str(f), str(dest))
-                print(f"  moved: {f} -> {dest}")
+        maybe_move(f)
 
 
 def move_tests_to_tests(target_dir: Path, sources: dict) -> None:
     tests_dir = target_dir / "tests"
     tests_dir.mkdir(exist_ok=True)
 
+    def maybe_move(f: Path) -> None:
+        try:
+            f.relative_to(tests_dir)
+            return
+        except ValueError:
+            pass
+        dest = tests_dir / f.name
+        if not dest.exists():
+            shutil.move(str(f), str(dest))
+            print(f"  moved: {f} -> {dest}")
+
     for f in sources.get("tests", []):
-        if f.parent != tests_dir:
-            dest = tests_dir / f.name
-            if not dest.exists():
-                shutil.move(str(f), str(dest))
-                print(f"  moved: {f} -> {dest}")
+        maybe_move(f)
 
 
 def create_scaffold(target_dir: Path) -> None:
@@ -174,27 +178,6 @@ def create_scaffold(target_dir: Path) -> None:
         )
         test_main.write_text(test_content, encoding="utf-8")
         print(f"  created: {test_main}")
-
-
-def update_cmake_test_entries(target_dir: Path, sources: dict) -> None:
-    tests_dir = target_dir / "tests"
-    tests_cmake = tests_dir / "CMakeLists.txt"
-    lib_name = PLACEHOLDER_MAP["LIB_NAME"]
-
-    test_files = list(tests_dir.glob("test_*.cpp"))
-    if not test_files:
-        return
-
-    lines = []
-    for tf in sorted(test_files):
-        name = tf.stem
-        lines.append(f"add_executable({name} {name}.cpp)")
-        lines.append(f"target_link_libraries({name} PRIVATE {lib_name} GTest::gtest_main)")
-        lines.append(f"gtest_discover_tests({name})")
-        lines.append("")
-
-    tests_cmake.write_text("\n".join(lines), encoding="utf-8")
-    print(f"  updated: {tests_cmake}")
 
 
 def generate_readme(target_dir: Path) -> None:
@@ -318,8 +301,6 @@ def run(args: argparse.Namespace) -> None:
 
     if not has_existing:
         create_scaffold(target_dir)
-
-    update_cmake_test_entries(target_dir, sources)
 
     generate_readme(target_dir)
 

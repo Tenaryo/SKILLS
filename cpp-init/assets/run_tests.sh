@@ -15,21 +15,23 @@ echo -e "${BLUE}========================================${NC}"
 echo
 
 mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
 
-if [ ! -f "CMakeCache.txt" ]; then
+if [ ! -f "$BUILD_DIR/CMakeCache.txt" ]; then
     echo -e "${YELLOW}Configuring CMake...${NC}"
-    cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    cmake -B "$BUILD_DIR" -S . -G Ninja \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_CXX_COMPILER=g++ \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 fi
 
 echo -e "${YELLOW}Building tests...${NC}"
-cmake --build . -j$(nproc)
+cmake --build "$BUILD_DIR" -j$(nproc)
 echo
 
 echo -e "${YELLOW}Running tests via ctest...${NC}"
 echo
 
-if ctest --output-on-failure -j$(nproc); then
+if ctest --test-dir "$BUILD_DIR" --output-on-failure -j$(nproc); then
     echo
     echo -e "${GREEN}All tests passed!${NC}"
     exit 0

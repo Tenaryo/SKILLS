@@ -43,25 +43,26 @@ project_root/
 - C++ standard: 23 (configurable)
 - Build system generator: Ninja
 - Export `compile_commands.json` for IDE/clangd/clang-tidy support
-- Create an INTERFACE library (`{project}_core`) for header-only or shared compile options
-- Main executable linked against the core library
+- Create a STATIC library (`{project}_lib`) that compiles all source files once, then links into executables
+- Main executable linked against the static library
 - `ENABLE_SANITIZERS` option (OFF by default) for ASan + UBSan
 - `BUILD_TESTS` option (ON by default) for conditional test building
 - Strict warnings: `-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`
 - Debug: `-g -O0`, Release: `-O3`
-- Google Test via system package (`find_package(GTest REQUIRED)`) when `BUILD_TESTS` is ON
+- Google Test via `FetchContent` (v1.14.0) when `BUILD_TESTS` is ON — no system dependency
 
 ### tests/CMakeLists.txt
 
 - One executable per `test_*.cpp` file
-- Each test linked against the core library and `GTest::gtest_main`
+- Each test linked against the static library and `GTest::gtest_main`
 - Uses `gtest_discover_tests()` to register each test with CTest
-- Uses `file(GLOB ...)` to auto-discover test files
+- Uses `file(GLOB ... CONFIGURE_DEPENDS ...)` to auto-discover test files
 
 ## Build Script (build.sh)
 
 - Uses `set -euo pipefail` for strict error handling
 - Default build type: Debug
+- Skips configure if `build/CMakeCache.txt` already exists; delete `build/` to force re-configure
 - Accepts build type as first argument: `./build.sh Release`
 - Build directory: `build/`
 - Generator: Ninja
@@ -71,11 +72,11 @@ project_root/
 ## Test Runner (run_tests.sh)
 
 - Uses `set -euo pipefail` for strict error handling
-- Auto-configures CMake if not already configured
+- Uses `cmake -B build -S .` (same flags as `build.sh` Debug) when not yet configured
 - Runs tests via `ctest --output-on-failure -j$(nproc)` for parallel execution
 - Colored output (Red/Green/Yellow/Blue)
 - Exit code 1 if any test fails, 0 if all pass
-- Test framework: Google Test (via system package, `apt install libgtest-dev`)
+- Test framework: Google Test (via FetchContent, auto-downloaded during CMake configure)
 
 ## Test File Conventions
 
@@ -126,8 +127,8 @@ Enabled checks:
 - `bugprone-*` (except `easily-swappable-parameters`)
 - `modernize-*` (with `use-trailing-return-type`)
 - `performance-*`
-- `readability-*` (except `magic-numbers`, `identifier-naming`)
-- `misc-*` (except `no-recursion`, `const-correctness`, `include-cleaner`)
+- `readability-*` (except `magic-numbers`, `identifier-naming`, `identifier-length`)
+- `misc-*` (except `no-recursion`, `include-cleaner`)
 - `portability-*`
 - `cppcoreguidelines-pro-type-member-init`
 

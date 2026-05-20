@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++-13 ninja-build cmake libgtest-dev
+          sudo apt-get install -y g++-13 ninja-build cmake
 
       - name: Configure CMake
         run: |
@@ -65,7 +65,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++-13 ninja-build cmake clang-tidy libgtest-dev
+          sudo apt-get install -y g++-13 ninja-build cmake clang-tidy
 
       - name: Configure CMake
         run: |
