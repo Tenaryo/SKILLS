@@ -52,7 +52,7 @@ description: This skill should be used when the user asks to "write a paper", "w
 
 如果没有提供材料，跳过本节。
 
-### 2.2 头脑风暴主题
+### 2.2 头脑风暴主题（若已明确可跳过）
 
 基于写作要求和阅读材料（如有），生成 2-4 个可选主题方向。
 
@@ -62,7 +62,7 @@ description: This skill should be used when the user asks to "write a paper", "w
 - 潜在的论证路径
 - 优缺点分析
 
-### 2.3 主题审批
+### 2.3 主题审批（若已明确可跳过）
 
 逐个向用户提交主题方案，每次只提交一个。
 
